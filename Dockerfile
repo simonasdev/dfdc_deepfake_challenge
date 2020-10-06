@@ -14,8 +14,8 @@ ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && apt-get install -y libglib2.0-0 libsm6 libxrender-dev libxext6 nano mc glances vim \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # Install cython
 RUN conda install cython -y && conda clean --all
@@ -32,31 +32,31 @@ RUN apt-get install libx11-dev libgtk-3-dev -y
 RUN pip install dlib
 RUN pip install facenet-pytorch
 RUN conda install \
-              pyhamcrest \
-              cython \
-              fiona \
-              h5py \
-              jupyter \
-              jupyterlab \
-              ipykernel \
-              matplotlib \
-	          ncurses \
-              numpy \
-			  statsmodels \
-              pandas \
-              pillow \
-              pip \
-              scipy \
-              scikit-image \
-              scikit-learn \
-              testpath \
-              tqdm \
-              pandas \
-			  opencv \
-	&& conda clean -p \
-	&& conda clean -t \
-	&& conda clean --yes --all
-RUN pip install albumentations timm pytorch_toolbelt tensorboardx
+  pyhamcrest \
+  cython \
+  fiona \
+  h5py \
+  jupyter \
+  jupyterlab \
+  ipykernel \
+  matplotlib \
+  ncurses \
+  numpy \
+  statsmodels \
+  pandas \
+  pillow \
+  pip \
+  scipy \
+  scikit-image \
+  scikit-learn \
+  testpath \
+  tqdm \
+  pandas \
+  opencv \
+  && conda clean -p \
+  && conda clean -t \
+  && conda clean --yes --all
+RUN pip install albumentations timm==0.1.30 pytorch_toolbelt tensorboardx
 # download pretraned Imagenet models
 RUN apt install wget
 RUN wget https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/tf_efficientnet_b7_ns-1dbc32de.pth -P /root/.cache/torch/checkpoints/
