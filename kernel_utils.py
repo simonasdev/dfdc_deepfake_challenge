@@ -339,7 +339,7 @@ def predict_on_video(face_extractor, video_path, batch_size, input_size, models,
                         bpred = y_pred[:n].cpu().numpy()
 
                         prediction = strategy(bpred)
-                        print("%s: %s" % (model.name, prediction))
+                        print("%s: %s" % (model, prediction))
                         preds.append(prediction)
                     return np.mean(preds)
     except Exception as e:
