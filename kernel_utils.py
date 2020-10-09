@@ -8,8 +8,7 @@ from albumentations.augmentations.functional import image_compression
 from facenet_pytorch.models.mtcnn import MTCNN
 from concurrent.futures import ThreadPoolExecutor
 
-from torchvision.transforms import Normalize
-from torchvision.utils import save_image
+from torchvision.transforms import Normalize, ToPILImage
 
 mean = [0.485, 0.456, 0.406]
 std = [0.229, 0.224, 0.225]
@@ -324,13 +323,13 @@ def predict_on_video(face_extractor, video_path, batch_size, input_size, models,
                         pass
             if n > 0:
                 x = torch.tensor(x, device="cuda").float()
-                save_image(x, 'x1.png')
+                ToPILImage()(x.squeeze()).save('x1.png')
                 # Preprocess the images.
                 x = x.permute((0, 3, 1, 2))
-                save_image(x, 'x2.png')
+                ToPILImage()(x.squeeze()).save('x2.png')
                 for i in range(len(x)):
                     x[i] = normalize_transform(x[i] / 255.)
-                save_image(x, 'x3.png')
+                ToPILImage()(x.squeeze()).save('x3.png')
                 # Make a prediction, then take the average.
                 with torch.no_grad():
                     preds = []
