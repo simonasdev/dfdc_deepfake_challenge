@@ -323,8 +323,10 @@ def predict_on_video(face_extractor, video_path, batch_size, input_size, models,
                         pass
             if n > 0:
                 x = torch.tensor(x, device="cuda").float()
+                print(x)
                 # Preprocess the images.
                 x = x.permute((0, 3, 1, 2))
+                print(x)
                 for i in range(len(x)):
                     x[i] = normalize_transform(x[i] / 255.)
                 # Make a prediction, then take the average.
