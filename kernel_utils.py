@@ -323,13 +323,10 @@ def predict_on_video(face_extractor, video_path, batch_size, input_size, models,
                         pass
             if n > 0:
                 x = torch.tensor(x, device="cuda").float()
-                ToPILImage()(x.squeeze()).save('x1.png')
                 # Preprocess the images.
                 x = x.permute((0, 3, 1, 2))
-                ToPILImage()(x.squeeze()).save('x2.png')
                 for i in range(len(x)):
                     x[i] = normalize_transform(x[i] / 255.)
-                ToPILImage()(x.squeeze()).save('x3.png')
                 # Make a prediction, then take the average.
                 with torch.no_grad():
                     preds = []
