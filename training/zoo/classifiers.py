@@ -158,8 +158,9 @@ class GlobalWeightedAvgPool2d(nn.Module):
 
 
 class DeepFakeClassifier(nn.Module):
-    def __init__(self, encoder, dropout_rate=0.0) -> None:
+    def __init__(self, encoder, name='', dropout_rate=0.0) -> None:
         super().__init__()
+        self.name = name
         self.encoder = encoder_params[encoder]["init_op"]()
         self.avg_pool = AdaptiveAvgPool2d((1, 1))
         self.dropout = Dropout(dropout_rate)

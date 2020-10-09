@@ -20,7 +20,7 @@ if __name__ == '__main__':
     models = []
     model_paths = [os.path.join(args.weights_dir, model) for model in args.models]
     for path in model_paths:
-        model = DeepFakeClassifier(encoder="tf_efficientnet_b7_ns").to("cuda")
+        model = DeepFakeClassifier(encoder="tf_efficientnet_b7_ns", name=os.path.basename(path)).to("cuda")
         print("loading state dict {}".format(path))
         checkpoint = torch.load(path, map_location="cpu")
         state_dict = checkpoint.get("state_dict", checkpoint)
