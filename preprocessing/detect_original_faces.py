@@ -29,12 +29,15 @@ def process_videos(videos, root_dir, detector_cls: Type[VideoFaceDetector]):
     for item in tqdm(loader):
         result = {}
         video, indices, frames = item[0]
+        print("loading video %s" % video)
         batches = [frames[i:i + detector._batch_size] for i in range(0, len(frames), detector._batch_size)]
+        print("detecting faces for %i batches" % len(batches))
         for j, frames in enumerate(batches):
             result.update({int(j * detector._batch_size) + i : b for i, b in zip(indices, detector._detect_faces(frames))})
         id = os.path.splitext(os.path.basename(video))[0]
         out_dir = os.path.join(root_dir, "boxes")
         os.makedirs(out_dir, exist_ok=True)
+        print('writing results %s' % out_dir)
         with open(os.path.join(out_dir, "{}.json".format(id)), "w") as f:
             json.dump(result, f)
 
