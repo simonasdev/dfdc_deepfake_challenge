@@ -37,7 +37,7 @@ def process_videos(videos, root_dir, detector_cls: Type[VideoFaceDetector]):
         id = os.path.splitext(os.path.basename(video))[0]
         out_dir = os.path.join(root_dir, "boxes")
         os.makedirs(out_dir, exist_ok=True)
-        print('writing results %s' % out_dir)
+        print('writing results for %s' % id)
         with open(os.path.join(out_dir, "{}.json".format(id)), "w") as f:
             json.dump(result, f)
 
