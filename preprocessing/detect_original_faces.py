@@ -3,6 +3,7 @@ import json
 import os
 from os import cpu_count
 from typing import Type
+import time
 
 from torch.utils.data.dataloader import DataLoader
 from tqdm import tqdm
@@ -27,6 +28,7 @@ def process_videos(videos, root_dir, detector_cls: Type[VideoFaceDetector]):
     dataset = VideoDataset(videos)
     loader = DataLoader(dataset, shuffle=False, num_workers=cpu_count() - 2, batch_size=1, collate_fn=lambda x: x)
     for item in tqdm(loader):
+        time.sleep(1)
         result = {}
         video, indices, frames = item[0]
         print("loading video %s" % video)
