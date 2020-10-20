@@ -26,7 +26,7 @@ def parse_args():
 def process_videos(videos, root_dir, detector_cls: Type[VideoFaceDetector]):
     detector = face_detector.__dict__[detector_cls](device="cuda:0")
     dataset = VideoDataset(videos)
-    loader = DataLoader(dataset, shuffle=False, num_workers=cpu_count() - 2, batch_size=1, collate_fn=lambda x: x)
+    loader = DataLoader(dataset, shuffle=False, num_workers=1, batch_size=1, collate_fn=lambda x: x)
     for item in tqdm(loader):
         time.sleep(1)
         result = {}
