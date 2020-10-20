@@ -58,7 +58,7 @@ RUN conda install \
   && conda clean --yes --all
 RUN pip install albumentations timm==0.1.30 pytorch_toolbelt tensorboardx
 # download pretraned Imagenet models
-RUN apt install wget
+RUN apt install wget ruby -y
 RUN wget https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/tf_efficientnet_b7_ns-1dbc32de.pth -P /root/.cache/torch/checkpoints/
 RUN wget https://github.com/rwightman/pytorch-image-models/releases/download/v0.1-weights/tf_efficientnet_b5_ns-6f26d0cf.pth -P /root/.cache/torch/checkpoints/
 
