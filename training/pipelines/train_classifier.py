@@ -184,8 +184,10 @@ def main():
         model = DataParallel(model).cuda()
     data_val.reset(1, args.seed)
     max_epochs = conf['optimizer']['schedule']['epochs']
+    print('Iterating epochs')
     for epoch in range(start_epoch, max_epochs):
         data_train.reset(epoch, args.seed)
+        print('Data reset')
         train_sampler = None
         if args.distributed:
             train_sampler = torch.utils.data.distributed.DistributedSampler(data_train)
@@ -197,6 +199,7 @@ def main():
                 p.requires_grad = False
         else:
             model.module.encoder.train()
+            print('Encoder train')
             for p in model.module.encoder.parameters():
                 p.requires_grad = True
 
@@ -206,7 +209,9 @@ def main():
 
         train_epoch(current_epoch, loss_functions, model, optimizer, scheduler, train_data_loader, summary_writer, conf,
                     args.local_rank, args.only_changed_frames)
+        print('Epoch train')
         model = model.eval()
+        print('Model eval')
 
         if args.local_rank == 0:
             torch.save({
@@ -219,11 +224,13 @@ def main():
                 'state_dict': model.state_dict(),
                 'bce_best': bce_best,
             }, args.output_dir + snapshot_name + "_{}".format(current_epoch))
+            print('Model save')
             if (epoch + 1) % args.test_every == 0:
                 bce_best = evaluate_val(args, val_data_loader, bce_best, model,
                                         snapshot_name=snapshot_name,
                                         current_epoch=current_epoch,
                                         summary_writer=summary_writer)
+                print('Evaluate val')
         current_epoch += 1
 
 
