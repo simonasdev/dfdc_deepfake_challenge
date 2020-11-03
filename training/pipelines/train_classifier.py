@@ -72,7 +72,7 @@ def main():
     parser = argparse.ArgumentParser("PyTorch Xview Pipeline")
     arg = parser.add_argument
     arg('--config', metavar='CONFIG_FILE', help='path to configuration file')
-    arg('--workers', type=int, default=6, help='number of cpu threads to use')
+    arg('--workers', type=int, default=8, help='number of cpu threads to use')
     arg('--gpu', type=str, default='0', help='List of GPUs for parallel training, e.g. 0,1,2,3')
     arg('--output-dir', type=str, default='weights/')
     arg('--resume', type=str, default='')
@@ -148,7 +148,7 @@ def main():
                                          folds_csv=args.folds_csv,
                                          transforms=create_val_transforms(conf["size"]),
                                          normalize=conf.get("normalize", None))
-    val_data_loader = DataLoader(data_val, batch_size=batch_size * 2, num_workers=args.workers, shuffle=False,
+    val_data_loader = DataLoader(data_val, batch_size=batch_size, num_workers=args.workers, shuffle=False,
                                  pin_memory=False)
     os.makedirs(args.logdir, exist_ok=True)
     summary_writer = SummaryWriter(args.logdir + '/' + conf.get("prefix", args.prefix) + conf['encoder'] + "_" + str(args.fold))
@@ -184,7 +184,6 @@ def main():
         model = DataParallel(model).cuda()
     data_val.reset(1, args.seed)
     max_epochs = conf['optimizer']['schedule']['epochs']
-    print('Iterating epochs')
     for epoch in range(start_epoch, max_epochs):
         data_train.reset(epoch, args.seed)
         print('Data reset')
@@ -267,6 +266,7 @@ def validate(net, data_loader, prefix=""):
 
     with torch.no_grad():
         for sample in tqdm(data_loader):
+            print("Sample %s" % ", ".join(sample["img_name"]))
             imgs = sample["image"].cuda()
             img_names = sample["img_name"]
             labels = sample["labels"].cuda().float()
