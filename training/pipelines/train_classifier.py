@@ -238,6 +238,7 @@ def evaluate_val(args, data_val, bce_best, model, snapshot_name, current_epoch, 
     model = model.eval()
 
     bce, probs, targets = validate(model, data_loader=data_val)
+    print("Validated bruuh")
     if args.local_rank == 0:
         summary_writer.add_scalar('val/bce', float(bce), global_step=current_epoch)
         if bce < bce_best:
@@ -271,12 +272,14 @@ def validate(net, data_loader, prefix=""):
             img_names = sample["img_name"]
             labels = sample["labels"].cuda().float()
             out = net(imgs)
+            print("Out: %s" % out)
             labels = labels.cpu().numpy()
             preds = torch.sigmoid(out).cpu().numpy()
             for i in range(out.shape[0]):
                 video, img_id = img_names[i].split("/")
                 probs[video].append(preds[i].tolist())
                 targets[video].append(labels[i].tolist())
+    print("Predicted")
     data_x = []
     data_y = []
     for vid, score in probs.items():
