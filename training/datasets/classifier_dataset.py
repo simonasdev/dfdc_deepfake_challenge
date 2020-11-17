@@ -251,6 +251,7 @@ class DeepFakeClassifierDataset(Dataset):
     def __getitem__(self, index: int):
 
         while True:
+            print("while true blet %i" % index)
             video, img_file, label, ori_video, frame, fold = self.data[index]
             try:
                 if self.mode == "train":
@@ -315,6 +316,7 @@ class DeepFakeClassifierDataset(Dataset):
                 return {"image": image, "labels": np.array((label,)), "img_name": os.path.join(video, img_file),
                         "valid": valid_label, "rotations": rotation}
             except Exception as e:
+                print("nu tiesiog exception %s" % sys.exc_info()[0])
                 traceback.print_exc(file=sys.stdout)
                 print("Broken image", os.path.join(self.data_root, self.crops_dir, video, img_file))
                 index = random.randint(0, len(self.data) - 1)

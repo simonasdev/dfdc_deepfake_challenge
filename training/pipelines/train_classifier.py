@@ -275,10 +275,12 @@ def validate(net, data_loader, prefix=""):
             print("Out: %s" % out)
             labels = labels.cpu().numpy()
             preds = torch.sigmoid(out).cpu().numpy()
+            print("Uf")
             for i in range(out.shape[0]):
                 video, img_id = img_names[i].split("/")
                 probs[video].append(preds[i].tolist())
                 targets[video].append(labels[i].tolist())
+            print("Nu?")
     print("Predicted")
     data_x = []
     data_y = []
