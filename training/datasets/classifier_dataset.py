@@ -251,16 +251,17 @@ class DeepFakeClassifierDataset(Dataset):
     def __getitem__(self, index: int):
 
         while True:
-            print("while true blet %i" % index)
             video, img_file, label, ori_video, frame, fold = self.data[index]
             try:
                 if self.mode == "train":
                     label = np.clip(label, self.label_smoothing, 1 - self.label_smoothing)
                 img_path = os.path.join(self.data_root, self.crops_dir, video, img_file)
+                print("img path plis %s" % img_path)
                 image = cv2.imread(img_path, cv2.IMREAD_COLOR)
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 mask = np.zeros(image.shape[:2], dtype=np.uint8)
                 diff_path = os.path.join(self.data_root, "diffs", video, img_file[:-4] + "_diff.png")
+                print("diff path plis %s" % diff_path)
                 try:
                     msk = cv2.imread(diff_path, cv2.IMREAD_GRAYSCALE)
                     if msk is not None:
@@ -291,11 +292,13 @@ class DeepFakeClassifierDataset(Dataset):
                     image = change_padding(image, self.padding_part)
                 valid_label = np.count_nonzero(mask[mask > 20]) > 32 or label < 0.5
                 valid_label = 1 if valid_label else 0
+                print("tipo valid label %d" % valid_label)
                 rotation = 0
                 if self.transforms:
                     data = self.transforms(image=image, mask=mask)
                     image = data["image"]
                     mask = data["mask"]
+                    print("nu transformed kazka")
                 if self.mode == "train" and self.hardcore and self.rotation:
                     # landmark_path = os.path.join(self.data_root, "landmarks", ori_video, img_file[:-4] + ".npy")
                     dropout = 0.8 if label > 0.5 else 0.6
@@ -313,6 +316,7 @@ class DeepFakeClassifierDataset(Dataset):
                     image = rot90(image, rotation)
 
                 image = img_to_tensor(image, self.normalize)
+                print("nu i tensor daba")
                 return {"image": image, "labels": np.array((label,)), "img_name": os.path.join(video, img_file),
                         "valid": valid_label, "rotations": rotation}
             except Exception as e:
