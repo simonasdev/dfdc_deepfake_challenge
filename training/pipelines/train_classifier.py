@@ -211,7 +211,7 @@ def main():
         print('Epoch train')
         model = model.eval()
         print('Model eval')
-
+        import pdb;pdb.set_trace()
         if args.local_rank == 0:
             torch.save({
                 'epoch': current_epoch + 1,
