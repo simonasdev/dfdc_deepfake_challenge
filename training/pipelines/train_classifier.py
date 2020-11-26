@@ -206,12 +206,17 @@ def main():
                                        shuffle=train_sampler is None, sampler=train_sampler, pin_memory=False,
                                        drop_last=True)
 
+        print(model)
+        print(model.state_dict())
         train_epoch(current_epoch, loss_functions, model, optimizer, scheduler, train_data_loader, summary_writer, conf,
                     args.local_rank, args.only_changed_frames)
+
+        print(model.state_dict())
+
         print('Epoch train')
         model = model.eval()
         print('Model eval')
-        import pdb;pdb.set_trace()
+
         if args.local_rank == 0:
             torch.save({
                 'epoch': current_epoch + 1,
