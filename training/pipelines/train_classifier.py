@@ -72,7 +72,7 @@ def main():
     parser = argparse.ArgumentParser("PyTorch Xview Pipeline")
     arg = parser.add_argument
     arg('--config', metavar='CONFIG_FILE', help='path to configuration file')
-    arg('--workers', type=int, default=1, help='number of cpu threads to use')
+    arg('--workers', type=int, default=0, help='number of cpu threads to use')
     arg('--gpu', type=str, default='0', help='List of GPUs for parallel training, e.g. 0,1,2,3')
     arg('--output-dir', type=str, default='weights/')
     arg('--resume', type=str, default='')
@@ -206,17 +206,25 @@ def main():
                                        shuffle=train_sampler is None, sampler=train_sampler, pin_memory=False,
                                        drop_last=True)
 
-        print(model)
-        print(model.state_dict())
+
         train_epoch(current_epoch, loss_functions, model, optimizer, scheduler, train_data_loader, summary_writer, conf,
                     args.local_rank, args.only_changed_frames)
-
-        print(model.state_dict())
 
         print('Epoch train')
         model = model.eval()
         print('Model eval')
 
+        with torch.no_grad():
+            print(model.cpu().state_dict())
+            print('no_grad CPU state dict')
+            print(model.state_dict())
+            print('no_grad State dict')
+
+        print(model.cpu().state_dict())
+        print('CPU state dict')
+        print(model.state_dict())
+        print('State dict')
+        import pdb;pdb.set_trace()
         if args.local_rank == 0:
             torch.save({
                 'epoch': current_epoch + 1,
