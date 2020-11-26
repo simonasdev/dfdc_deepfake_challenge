@@ -193,13 +193,13 @@ def main():
             train_sampler.set_epoch(epoch)
         if epoch < args.freeze_epochs:
             print("Freezing encoder!!!")
-            model.module.encoder.eval()
-            for p in model.module.encoder.parameters():
+            model.encoder.eval()
+            for p in model.encoder.parameters():
                 p.requires_grad = False
         else:
-            model.module.encoder.train()
+            model.encoder.train()
             print('Encoder train')
-            for p in model.module.encoder.parameters():
+            for p in model.encoder.parameters():
                 p.requires_grad = True
 
         train_data_loader = DataLoader(data_train, batch_size=batch_size, num_workers=args.workers,
