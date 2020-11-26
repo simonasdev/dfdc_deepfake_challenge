@@ -181,7 +181,7 @@ def main():
     if args.distributed:
         model = DistributedDataParallel(model, delay_allreduce=True)
     else:
-        model = DataParallel(model).cuda()
+        model = model.cuda()
     data_val.reset(1, args.seed)
     max_epochs = conf['optimizer']['schedule']['epochs']
     for epoch in range(start_epoch, max_epochs):
